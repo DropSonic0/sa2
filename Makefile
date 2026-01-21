@@ -43,6 +43,10 @@ ifeq ($(PLATFORM),gba)
   endif
 
   PREFIX := arm-none-eabi-
+# PS3
+else ifeq ($(PLATFORM),ps3)
+  TOOLCHAIN := $(PS3DEV)
+  PREFIX := ppu-
 # x86
 else ifeq ($(CPU_ARCH),i386)
   ifeq ($(PLATFORM),sdl_win32)
@@ -120,6 +124,10 @@ else ifeq ($(PLATFORM),sdl)
 ROM      := $(BUILD_NAME).sdl
 ELF      := $(ROM).elf
 MAP      := $(ROM).map
+else ifeq ($(PLATFORM),ps3)
+ELF      := $(BUILD_NAME).elf
+ROM      := $(BUILD_NAME).self
+MAP      := $(BUILD_NAME).map
 else
 ROM      := $(BUILD_NAME).$(PLATFORM).exe
 ELF      := $(ROM:.exe=.elf)
@@ -220,6 +228,9 @@ ifeq ($(BUILD_NAME), sa1)
     PROLOGUE_FIX := -fprologue-bugfix
 endif # BUILD_NAME == sa1
 
+else ifeq ($(PLATFORM),ps3)
+    include PS3.cfg
+    CPPFLAGS += -D PLATFORM_GBA=0 -D PLATFORM_SDL=0 -D PLATFORM_WIN32=0 -D PLATFORM_PS3=1 -D CPU_ARCH_X86=0 -D CPU_ARCH_ARM=0
 else
 	CC1FLAGS += -Wstrict-overflow=1
 	ifeq ($(PLATFORM),sdl)
@@ -416,6 +427,8 @@ sdl_win32:
 
 win32: ; @$(MAKE) PLATFORM=win32 CPU_ARCH=i386
 
+ps3: ; @$(MAKE) PLATFORM=ps3 CPU_ARCH=ppu
+
 #### RECIPES ####
 
 include songs.mk
@@ -476,6 +489,12 @@ ifeq ($(PLATFORM),gba)
 	$(FIX) $@ -p -t"$(TITLE)" -c$(GAME_CODE) -m$(MAKER_CODE) -r$(GAME_REVISION) --silent
 else ifeq ($(PLATFORM),sdl)
 	cp $< $@
+else ifeq ($(PLATFORM),ps3)
+	@echo "CEX self ... $(notdir $@)"
+	@$(STRIP) $< -o $(ELF)
+	@$(SPRX) $(ELF)
+	@$(SELF) $(ELF) $@
+	@$(FSELF) $(ELF) $(basename $@).fake.self
 else
 	$(OBJCOPY) -O pei-x86-64 $< $@
 endif
