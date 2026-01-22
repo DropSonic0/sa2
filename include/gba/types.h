@@ -1,8 +1,6 @@
 #ifndef GUARD_GBA_TYPES_H
 #define GUARD_GBA_TYPES_H
 
-#include "gba/defines.h" // for int_vcount (TODO)
-
 #if !GEN_CTX
 #include <stdint.h>
 #endif
