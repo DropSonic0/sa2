@@ -18,16 +18,21 @@
 #endif
 
 // TODO: Move these elsewhere?
-// #ifdef __GNUC__
-#define NAKED __attribute__((naked))
-#define UNUSED __attribute__((unused))
-//#define PACKED __attribute__((packed))
-#if defined(__GNUC__) && !defined(__PS3__)
+#ifdef __GNUC__
+#define NAKED      __attribute__((naked))
+#define UNUSED     __attribute__((unused))
+#define PACKED     __attribute__((packed))
+#if !defined(__PS3__)
 #define ALIGNED(n) __attribute__((aligned(n)))
 #else
 #define ALIGNED(n)
 #endif
-// #endif
+#else
+#define NAKED
+#define UNUSED
+#define PACKED
+#define ALIGNED(n)
+#endif
 
 #define EWRAM_SIZE      0x40000
 #define IWRAM_SIZE      0x7E00
