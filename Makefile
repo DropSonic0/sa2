@@ -583,7 +583,7 @@ bribasa:
 	@$(MAKE) -C tools/BriBaSA_ex
 
 $(TOOLDIRS): tool_libs
-	@env -i "PATH=/usr/bin:/bin" $(MAKE) -C $@
+	@env -i "PATH=/usr/bin:/bin" $(MAKE) -C $@ CC=gcc CXX=g++ PKG_CONFIG_PATH=
     
 ### DEPS INSTALL COMMANDS ###
 
