@@ -566,13 +566,29 @@ u16 Platform_GetKeyInput(void)
 
 // BIOS function implementations are based on the VBA-M source code.
 
-static uint32_t CPUReadMemory(const void *src) { return *(uint32_t *)src; }
+static uint32_t CPUReadMemory(const void *src)
+{
+    uint32_t val;
+    memcpy(&val, src, sizeof(val));
+    return val;
+}
 
-static void CPUWriteMemory(void *dest, uint32_t val) { *(uint32_t *)dest = val; }
+static void CPUWriteMemory(void *dest, uint32_t val)
+{
+    memcpy(dest, &val, sizeof(val));
+}
 
-static uint16_t CPUReadHalfWord(const void *src) { return *(uint16_t *)src; }
+static uint16_t CPUReadHalfWord(const void *src)
+{
+    uint16_t val;
+    memcpy(&val, src, sizeof(val));
+    return val;
+}
 
-static void CPUWriteHalfWord(void *dest, uint16_t val) { *(uint16_t *)dest = val; }
+static void CPUWriteHalfWord(void *dest, uint16_t val)
+{
+    memcpy(dest, &val, sizeof(val));
+}
 
 static uint8_t CPUReadByte(const void *src) { return *(uint8_t *)src; }
 
