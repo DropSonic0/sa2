@@ -416,6 +416,12 @@ sdl_win32:
 
 win32: ; @$(MAKE) PLATFORM=win32 CPU_ARCH=i386
 
+ps3: ; @$(MAKE) PLATFORM=ps3 CPU_ARCH=ppu
+
+ifeq ($(PLATFORM),ps3)
+include PS3.cfg
+endif
+
 #### RECIPES ####
 
 include songs.mk
