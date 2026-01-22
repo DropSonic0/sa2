@@ -43,6 +43,10 @@ ifeq ($(PLATFORM),gba)
   endif
 
   PREFIX := arm-none-eabi-
+# PS3
+else ifeq ($(PLATFORM),ps3)
+  PREFIX := ppu-
+  include PS3.cfg
 # x86
 else ifeq ($(CPU_ARCH),i386)
   ifeq ($(PLATFORM),sdl_win32)
@@ -415,12 +419,6 @@ sdl_win32:
 	@$(MAKE) PLATFORM=sdl_win32 CPU_ARCH=i386
 
 win32: ; @$(MAKE) PLATFORM=win32 CPU_ARCH=i386
-
-ps3: ; @$(MAKE) PLATFORM=ps3 CPU_ARCH=ppu
-
-ifeq ($(PLATFORM),ps3)
-include PS3.cfg
-endif
 
 #### RECIPES ####
 
