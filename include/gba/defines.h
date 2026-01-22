@@ -22,10 +22,10 @@
 #define NAKED __attribute__((naked))
 #define UNUSED __attribute__((unused))
 //#define PACKED __attribute__((packed))
-#ifdef __PS3__
-#define ALIGNED(n)
-#else
+#if defined(__GNUC__) && !defined(__PS3__)
 #define ALIGNED(n) __attribute__((aligned(n)))
+#else
+#define ALIGNED(n)
 #endif
 // #endif
 
