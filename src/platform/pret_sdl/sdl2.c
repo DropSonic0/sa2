@@ -1272,12 +1272,9 @@ static uint16_t alphaBlendColor(uint16_t targetA, uint16_t targetB)
     unsigned int g = ((getGreenChannel(targetA) * eva) + (getGreenChannel(targetB) * evb)) >> 4;
     unsigned int b = ((getBlueChannel(targetA) * eva) + (getBlueChannel(targetB) * evb)) >> 4;
 
-    if (r > 31)
-        r = 31;
-    if (g > 31)
-        g = 31;
-    if (b > 31)
-        b = 31;
+    r = MIN(r, 31);
+    g = MIN(g, 31);
+    b = MIN(b, 31);
 
     return r | (g << 5) | (b << 10) | (1 << 15);
 }
