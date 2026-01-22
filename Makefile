@@ -18,6 +18,9 @@ MAKEFLAGS += --no-print-directory
 ROOT_DIR := "$(shell dirname "$(realpath $(firstword $(MAKEFILE_LIST)))")"
 OS       := $(shell uname)
 
+INCLUDE_DIRS = include
+INCLUDE_CPP_ARGS := $(INCLUDE_DIRS:%=-iquote %)
+
 ### TOOLCHAIN ###
 
 # GBA
@@ -43,6 +46,10 @@ ifeq ($(PLATFORM),gba)
   endif
 
   PREFIX := arm-none-eabi-
+# PS3
+else ifeq ($(PLATFORM),ps3)
+  PREFIX := ppu-
+  include PS3.cfg
 # x86
 else ifeq ($(CPU_ARCH),i386)
   ifeq ($(PLATFORM),sdl_win32)
@@ -126,8 +133,6 @@ ELF      := $(ROM:.exe=.elf)
 MAP      := $(ROM:.exe=.map)
 endif
 
-INCLUDE_DIRS = include
-INCLUDE_CPP_ARGS := $(INCLUDE_DIRS:%=-iquote %)
 INCLUDE_SCANINC_ARGS := $(INCLUDE_DIRS:%=-I %)
 
 ASM_SUBDIR = asm
@@ -416,6 +421,7 @@ sdl_win32:
 
 win32: ; @$(MAKE) PLATFORM=win32 CPU_ARCH=i386
 
+ps3: ; @$(MAKE) PLATFORM=ps3 CPU_ARCH=ppu
 #### RECIPES ####
 
 include songs.mk
@@ -577,7 +583,7 @@ bribasa:
 	@$(MAKE) -C tools/BriBaSA_ex
 
 $(TOOLDIRS): tool_libs
-	@$(MAKE) -C $@
+	@env -i "PATH=/usr/bin:/bin" $(MAKE) -C $@ CC=gcc CXX=g++ PKG_CONFIG_PATH=
     
 ### DEPS INSTALL COMMANDS ###
 
