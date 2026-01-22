@@ -583,7 +583,7 @@ bribasa:
 	@$(MAKE) -C tools/BriBaSA_ex
 
 $(TOOLDIRS): tool_libs
-	@$(MAKE) -C $@
+	@$(MAKE) -C $@ CC=gcc CXX=g++
     
 ### DEPS INSTALL COMMANDS ###
 
