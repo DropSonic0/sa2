@@ -583,7 +583,7 @@ bribasa:
 	@$(MAKE) -C tools/BriBaSA_ex
 
 $(TOOLDIRS): tool_libs
-	@env -i "PATH=$(PATH)" "HOME=$(HOME)" $(MAKE) -C $@
+	@env -i "PATH=/usr/bin:/bin" $(MAKE) -C $@
     
 ### DEPS INSTALL COMMANDS ###
 
