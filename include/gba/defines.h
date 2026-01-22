@@ -22,7 +22,11 @@
 #define NAKED __attribute__((naked))
 #define UNUSED __attribute__((unused))
 //#define PACKED __attribute__((packed))
+#ifdef __PS3__
+#define ALIGNED(n)
+#else
 #define ALIGNED(n) __attribute__((aligned(n)))
+#endif
 // #endif
 
 #define EWRAM_SIZE      0x40000
