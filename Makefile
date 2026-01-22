@@ -18,6 +18,9 @@ MAKEFLAGS += --no-print-directory
 ROOT_DIR := "$(shell dirname "$(realpath $(firstword $(MAKEFILE_LIST)))")"
 OS       := $(shell uname)
 
+INCLUDE_DIRS = include
+INCLUDE_CPP_ARGS := $(INCLUDE_DIRS:%=-iquote %)
+
 ### TOOLCHAIN ###
 
 # GBA
@@ -130,8 +133,6 @@ ELF      := $(ROM:.exe=.elf)
 MAP      := $(ROM:.exe=.map)
 endif
 
-INCLUDE_DIRS = include
-INCLUDE_CPP_ARGS := $(INCLUDE_DIRS:%=-iquote %)
 INCLUDE_SCANINC_ARGS := $(INCLUDE_DIRS:%=-I %)
 
 ASM_SUBDIR = asm
