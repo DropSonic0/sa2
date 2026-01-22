@@ -1272,9 +1272,25 @@ static uint16_t alphaBlendColor(uint16_t targetA, uint16_t targetB)
     unsigned int g = ((getGreenChannel(targetA) * eva) + (getGreenChannel(targetB) * evb)) >> 4;
     unsigned int b = ((getBlueChannel(targetA) * eva) + (getBlueChannel(targetB) * evb)) >> 4;
 
-    r = MIN(r, 31);
-    g = MIN(g, 31);
-    b = MIN(b, 31);
+    // Workaround for a bug in the PS3's PPU GCC compiler.
+    // The compiler generates an invalid `mfcr` instruction with two operands
+    // when optimizing the saturation logic (e.g., `if (r > 31) r = 31;`).
+    // Using a volatile temporary variable forces the comparison and prevents
+    // the faulty optimization.
+    // Workaround for a bug in the PS3's PPU GCC compiler.
+    // The compiler generates an invalid `mfcr` instruction with two operands
+    // when optimizing the saturation logic (e.g., `if (r > 31) r = 31;`).
+    // Using a volatile temporary variable forces the comparison and prevents
+    // the faulty optimization.
+    volatile unsigned int temp_r = r;
+    if (temp_r > 31)
+        r = 31;
+    volatile unsigned int temp_g = g;
+    if (temp_g > 31)
+        g = 31;
+    volatile unsigned int temp_b = b;
+    if (temp_b > 31)
+        b = 31;
 
     return r | (g << 5) | (b << 10) | (1 << 15);
 }
@@ -1286,11 +1302,19 @@ static uint16_t alphaBrightnessIncrease(uint16_t targetA)
     unsigned int g = getGreenChannel(targetA) + (31 - getGreenChannel(targetA)) * evy / 16;
     unsigned int b = getBlueChannel(targetA) + (31 - getBlueChannel(targetA)) * evy / 16;
 
-    if (r > 31)
+    // Workaround for a bug in the PS3's PPU GCC compiler.
+    // The compiler generates an invalid `mfcr` instruction with two operands
+    // when optimizing the saturation logic (e.g., `if (r > 31) r = 31;`).
+    // Using a volatile temporary variable forces the comparison and prevents
+    // the faulty optimization.
+    volatile unsigned int temp_r = r;
+    if (temp_r > 31)
         r = 31;
-    if (g > 31)
+    volatile unsigned int temp_g = g;
+    if (temp_g > 31)
         g = 31;
-    if (b > 31)
+    volatile unsigned int temp_b = b;
+    if (temp_b > 31)
         b = 31;
 
     return r | (g << 5) | (b << 10) | (1 << 15);
@@ -1303,11 +1327,19 @@ static uint16_t alphaBrightnessDecrease(uint16_t targetA)
     unsigned int g = getGreenChannel(targetA) - getGreenChannel(targetA) * evy / 16;
     unsigned int b = getBlueChannel(targetA) - getBlueChannel(targetA) * evy / 16;
 
-    if (r > 31)
+    // Workaround for a bug in the PS3's PPU GCC compiler.
+    // The compiler generates an invalid `mfcr` instruction with two operands
+    // when optimizing the saturation logic (e.g., `if (r > 31) r = 31;`).
+    // Using a volatile temporary variable forces the comparison and prevents
+    // the faulty optimization.
+    volatile unsigned int temp_r = r;
+    if (temp_r > 31)
         r = 31;
-    if (g > 31)
+    volatile unsigned int temp_g = g;
+    if (temp_g > 31)
         g = 31;
-    if (b > 31)
+    volatile unsigned int temp_b = b;
+    if (temp_b > 31)
         b = 31;
 
     return r | (g << 5) | (b << 10) | (1 << 15);
