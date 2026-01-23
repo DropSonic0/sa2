@@ -1263,6 +1263,7 @@ const u8 spriteSizes[][2] = {
 #define getBlueChannel(x)  ((x >> 10) & 0x1F)
 #define isbgEnabled(x)     ((REG_DISPCNT >> 8) & 0xF) & (1 << x)
 
+#if !defined(__PS3__)
 static uint16_t alphaBlendColor(uint16_t targetA, uint16_t targetB)
 {
     unsigned int eva = REG_BLDALPHA & 0x1F;
@@ -1281,7 +1282,15 @@ static uint16_t alphaBlendColor(uint16_t targetA, uint16_t targetB)
 
     return r | (g << 5) | (b << 10) | (1 << 15);
 }
+#else
+static uint16_t alphaBlendColor(uint16_t targetA, uint16_t targetB)
+{
+    // Stub implementation for PS3 to avoid compiler bug
+    return targetA;
+}
+#endif
 
+#if !defined(__PS3__)
 static uint16_t alphaBrightnessIncrease(uint16_t targetA)
 {
     unsigned int evy = (REG_BLDY & 0x1F);
@@ -1298,7 +1307,15 @@ static uint16_t alphaBrightnessIncrease(uint16_t targetA)
 
     return r | (g << 5) | (b << 10) | (1 << 15);
 }
+#else
+static uint16_t alphaBrightnessIncrease(uint16_t targetA)
+{
+    // Stub implementation for PS3 to avoid compiler bug
+    return targetA;
+}
+#endif
 
+#if !defined(__PS3__)
 static uint16_t alphaBrightnessDecrease(uint16_t targetA)
 {
     unsigned int evy = (REG_BLDY & 0x1F);
@@ -1315,6 +1332,13 @@ static uint16_t alphaBrightnessDecrease(uint16_t targetA)
 
     return r | (g << 5) | (b << 10) | (1 << 15);
 }
+#else
+static uint16_t alphaBrightnessDecrease(uint16_t targetA)
+{
+    // Stub implementation for PS3 to avoid compiler bug
+    return targetA;
+}
+#endif
 
 // outputs the blended pixel in colorOutput, the prxxx are the bg priority and
 // subpriority, pixelpos is pixel offset in scanline
