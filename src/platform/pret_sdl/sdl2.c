@@ -891,6 +891,7 @@ const s16 sineTable[256]
         (s16)0xE783, (s16)0xE8F8, (s16)0xEA71, (s16)0xEBED, (s16)0xED6C, (s16)0xEEEF, (s16)0xF074, (s16)0xF1FB, (s16)0xF384, (s16)0xF50F,
         (s16)0xF69C, (s16)0xF82B, (s16)0xF9BB, (s16)0xFB4B, (s16)0xFCDD, (s16)0xFE6E };
 
+#if !defined(__PS3__)
 void BgAffineSet(struct BgAffineSrcData *src, struct BgAffineDstData *dest, s32 count)
 {
     for (s32 i = 0; i < count; i++) {
@@ -921,7 +922,11 @@ void BgAffineSet(struct BgAffineSrcData *src, struct BgAffineDstData *dest, s32 
         dest[i].dy = starty;
     }
 }
+#else
+void BgAffineSet(struct BgAffineSrcData *src, struct BgAffineDstData *dest, s32 count) {}
+#endif
 
+#if !defined(__PS3__)
 void ObjAffineSet(struct ObjAffineSrcData *src, void *dest, s32 count, s32 offset)
 {
     for (s32 i = 0; i < count; i++) {
@@ -947,6 +952,9 @@ void ObjAffineSet(struct ObjAffineSrcData *src, void *dest, s32 count, s32 offse
         dest += offset;
     }
 }
+#else
+void ObjAffineSet(struct ObjAffineSrcData *src, void *dest, s32 count, s32 offset) {}
+#endif
 
 void SoftReset(u32 resetFlags) { }
 
