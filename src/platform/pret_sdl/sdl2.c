@@ -891,6 +891,7 @@ const s16 sineTable[256]
         (s16)0xE783, (s16)0xE8F8, (s16)0xEA71, (s16)0xEBED, (s16)0xED6C, (s16)0xEEEF, (s16)0xF074, (s16)0xF1FB, (s16)0xF384, (s16)0xF50F,
         (s16)0xF69C, (s16)0xF82B, (s16)0xF9BB, (s16)0xFB4B, (s16)0xFCDD, (s16)0xFE6E };
 
+#if !defined(__PS3__)
 void BgAffineSet(struct BgAffineSrcData *src, struct BgAffineDstData *dest, s32 count)
 {
     for (s32 i = 0; i < count; i++) {
@@ -921,7 +922,11 @@ void BgAffineSet(struct BgAffineSrcData *src, struct BgAffineDstData *dest, s32 
         dest[i].dy = starty;
     }
 }
+#else
+void BgAffineSet(struct BgAffineSrcData *src, struct BgAffineDstData *dest, s32 count) {}
+#endif
 
+#if !defined(__PS3__)
 void ObjAffineSet(struct ObjAffineSrcData *src, void *dest, s32 count, s32 offset)
 {
     for (s32 i = 0; i < count; i++) {
@@ -947,6 +952,9 @@ void ObjAffineSet(struct ObjAffineSrcData *src, void *dest, s32 count, s32 offse
         dest += offset;
     }
 }
+#else
+void ObjAffineSet(struct ObjAffineSrcData *src, void *dest, s32 count, s32 offset) {}
+#endif
 
 void SoftReset(u32 resetFlags) { }
 
@@ -1263,6 +1271,7 @@ const u8 spriteSizes[][2] = {
 #define getBlueChannel(x)  ((x >> 10) & 0x1F)
 #define isbgEnabled(x)     ((REG_DISPCNT >> 8) & 0xF) & (1 << x)
 
+#if !defined(__PS3__)
 static uint16_t alphaBlendColor(uint16_t targetA, uint16_t targetB)
 {
     unsigned int eva = REG_BLDALPHA & 0x1F;
@@ -1281,7 +1290,15 @@ static uint16_t alphaBlendColor(uint16_t targetA, uint16_t targetB)
 
     return r | (g << 5) | (b << 10) | (1 << 15);
 }
+#else
+static uint16_t alphaBlendColor(uint16_t targetA, uint16_t targetB)
+{
+    // Stub implementation for PS3 to avoid compiler bug
+    return targetA;
+}
+#endif
 
+#if !defined(__PS3__)
 static uint16_t alphaBrightnessIncrease(uint16_t targetA)
 {
     unsigned int evy = (REG_BLDY & 0x1F);
@@ -1298,7 +1315,15 @@ static uint16_t alphaBrightnessIncrease(uint16_t targetA)
 
     return r | (g << 5) | (b << 10) | (1 << 15);
 }
+#else
+static uint16_t alphaBrightnessIncrease(uint16_t targetA)
+{
+    // Stub implementation for PS3 to avoid compiler bug
+    return targetA;
+}
+#endif
 
+#if !defined(__PS3__)
 static uint16_t alphaBrightnessDecrease(uint16_t targetA)
 {
     unsigned int evy = (REG_BLDY & 0x1F);
@@ -1315,6 +1340,13 @@ static uint16_t alphaBrightnessDecrease(uint16_t targetA)
 
     return r | (g << 5) | (b << 10) | (1 << 15);
 }
+#else
+static uint16_t alphaBrightnessDecrease(uint16_t targetA)
+{
+    // Stub implementation for PS3 to avoid compiler bug
+    return targetA;
+}
+#endif
 
 // outputs the blended pixel in colorOutput, the prxxx are the bg priority and
 // subpriority, pixelpos is pixel offset in scanline
